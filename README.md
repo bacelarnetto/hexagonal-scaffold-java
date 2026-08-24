@@ -3,6 +3,9 @@
 Template Maven multi-módulo (Java 21 + Spring Boot 3.5.3) para arquitetura hexagonal pura. Nasce
 validado — os 4 módulos compilam, os 10 testes passam, o jar sobe e responde de verdade.
 
+Scaffold de **app atômico**: gera uma única aplicação Spring Boot, com um único domínio de negócio
+por vez — não é um monorepo nem multi-serviço.
+
 Versão Java de [`hexagonal-scaffold-kotlin`](https://github.com/bacelarnetto/hexagonal-scaffold-kotlin)
 — mesma arquitetura, mesmo módulo de exemplo `produto`, mesma pirâmide de testes. Ver
 [Diferenças em relação à versão Kotlin](#diferenças-em-relação-à-versão-kotlin) abaixo.

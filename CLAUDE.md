@@ -89,6 +89,13 @@ chamado de fora do bean). É por isso que `cadastrarEmLote()` não reaproveita `
 dentro — usa um método privado (`cadastrarItemDoLote`, sem `@Transactional`) para o passo comum,
 em vez de encadear dois métodos `@Transactional` públicos da mesma classe.
 
+**`@Transactional` não cobre orquestração multi-serviço (ex: Temporal.io).** Todo esse mecanismo de
+rollback depende de uma única transação JDBC compartilhada entre as chamadas. Um processo orquestrado
+por um Workflow (Temporal ou similar), onde cada Activity pode tocar um serviço/banco diferente, não
+tem essa transação única pra reverter — `@Transactional` simplesmente não se aplica entre Activities.
+Compensação nesse cenário é responsabilidade explícita (Saga pattern do próprio orquestrador, ou
+Activities de compensação escritas à mão), não um efeito colateral de anotação. Ver `TODO.md`.
+
 ### Mapeamento entity ↔ domain
 
 Sempre explícito (`toDomain()`/`toEntity()` escritos à mão no adapter). Nunca
