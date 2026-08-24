@@ -7,7 +7,7 @@ description: Bootstraps a new Java + Spring Boot backend project from the hexago
 
 Gera um projeto novo a partir de `~/work/hexagonal-scaffold-java` (Java 21 + Spring Boot 3, Maven
 multi-módulo: `domain/infrastructure/application/starter`). O scaffold já vem validado — copiar e
-ajustar em vez de escrever do zero. Não pule a validação final (Passo 6): renomear pacote é uma
+ajustar em vez de escrever do zero. Não pule a validação final (Passo 7): renomear pacote é uma
 operação fácil de fazer parcialmente sem perceber.
 
 ## Passo 1 — Perguntar (AskUserQuestion, uma única rodada)
@@ -63,12 +63,24 @@ Ver [mysql-setup.md](mysql-setup.md) para o passo a passo completo: dependência
 `application.properties`, `docker-compose.yml`, e a troca do teste de integração de MockMvc+H2 para
 `@SpringBootTest` + Testcontainers+MySQL.
 
-## Passo 6 — Validar
+## Passo 6 — Renomear `docker/` e `kubernetes/`
+
+`grep -rl "scaffold"` em `kubernetes/*.yaml` — o nome do app aparece em `metadata.name` (Deployment,
+Service, ConfigMap, Secret), em `matchLabels.app`/`labels.app`, no `configMapKeyRef.name`/
+`secretKeyRef.name` de cada env var do Deployment, e no path de exemplo da imagem em
+`kubernetes/deployment.yaml`. Trocar `scaffold` → `<app>` em todas essas ocorrências, mantendo
+Deployment/Service/ConfigMap/Secret apontando uns para os outros consistentemente (ex: se o
+ConfigMap vira `padaria-api-config`, o `configMapKeyRef.name` no Deployment tem que virar
+`padaria-api-config` também — não é só o `metadata.name` do próprio arquivo). `docker/Dockerfile`
+não tem referência ao nome do app, não precisa mexer.
+
+## Passo 7 — Validar
 
 ```bash
 cd <destino> && mvn test
 docker compose up -d          # sobe o MySQL local para rodar a app (não é usado pelos testes)
 mvn spring-boot:run -pl starter
+docker build -f docker/Dockerfile -t <app>:test .   # confirma que a imagem builda depois do Passo 6
 ```
 
 Só reporte a tarefa como concluída depois de `mvn test` passar de verdade. Se usar Testcontainers e
@@ -86,6 +98,9 @@ local que já use Testcontainers com Colima, se os testes não acharem o socket 
   do teste de integração também, se esquecido
 - Não pular a renomeação dos artifactId dos módulos filhos — dois projetos gerados a partir daqui
   compartilhando o mesmo `~/.m2` local vão colidir em `scaffold-domain` se isso for esquecido
+- Não deixar `scaffold` sobrando em `kubernetes/*.yaml` — dois projetos gerados a partir daqui
+  aplicados no mesmo cluster/namespace vão colidir nos mesmos nomes de Deployment/Service/
+  ConfigMap/Secret se isso for esquecido, exatamente pelo mesmo motivo do artifactId Maven acima
 - Não gerar o projeto sem rodar `mvn test` no final — renomeação de pacote quebra silenciosamente
   com frequência (import esquecido, diretório não movido)
 - Não adicionar Lombok em `domain/` ao criar o domínio novo — fica restrito a `infrastructure/`

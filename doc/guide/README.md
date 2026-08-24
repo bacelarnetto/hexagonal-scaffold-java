@@ -27,6 +27,7 @@ direto no navegador (`file://`) — precisa de um servidor HTTP, por isso o `npx
 | [Pirâmide de testes](testes) | Os 3 níveis de teste usados aqui e por quê |
 | [Prompting e CLAUDE.md](ia-workflow) | Como usar um assistente de IA para estender este projeto sem quebrar o padrão |
 | [Skill de bootstrap](bootstrap) | Como gerar um projeto novo a partir deste scaffold |
+| [Docker e Kubernetes (GCP)](deploy) | Build da imagem, manifests de deploy, por que não tem banco dentro do cluster |
 
 ## Links rápidos
 

@@ -27,6 +27,8 @@ infrastructure/  @Entity, JpaRepository, @Repository adapter. Mapeamento entity<
                  (toDomain()/toEntity()), nunca BeanUtils.copyProperties(). Único módulo com Lombok.
 application/     @Service/@Transactional, @RestController, DTOs, mappers, GlobalExceptionHandler.
 starter/         @SpringBootApplication + application.properties. Nenhuma regra de negócio aqui.
+docker/          Dockerfile multi-stage self-contido (build + runtime, sem precisar de mvn local).
+kubernetes/      Deployment + Service + ConfigMap + Secret (template), voltado para GKE/GCP.
 doc/guide/       Guia docsify (arquitetura, módulo de exemplo, pirâmide de testes, workflow com IA).
 ```
 
@@ -52,6 +54,22 @@ curl -X POST localhost:8080/produto -H "Content-Type: application/json" \
 
 Banco: H2 em memória (modo MySQL), zero infra externa necessária — é só o scaffold em si. Um
 projeto gerado a partir dele já nasce com MySQL de verdade (ver abaixo).
+
+## Docker e Kubernetes (deploy no GCP)
+
+```bash
+docker build -f docker/Dockerfile -t REGION-docker.pkg.dev/PROJECT_ID/REPOSITORY/scaffold:TAG .
+kubectl apply -f kubernetes/configmap.yaml
+kubectl apply -f kubernetes/deployment.yaml
+kubectl apply -f kubernetes/service.yaml
+```
+
+`docker/Dockerfile` é multi-stage e self-contido — não precisa rodar `mvn package` antes, funciona
+direto num pipeline de CI que só tenha Docker. `kubernetes/` traz Deployment (com liveness/readiness
+via `spring-boot-starter-actuator`) + Service (LoadBalancer) + ConfigMap + um template de Secret
+(`secret.example.yaml` — nunca commite o `secret.yaml` real, já está no `.gitignore`). De propósito
+**não** inclui banco dentro do cluster — o padrão recomendado é Cloud SQL gerenciado, acessado via
+Cloud SQL Auth Proxy como sidecar. Detalhes e o exemplo completo do sidecar: `doc/guide/deploy.md`.
 
 ## Gerando um projeto novo a partir daqui
 

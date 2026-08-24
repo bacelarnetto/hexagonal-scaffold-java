@@ -8,3 +8,6 @@
 - **Trabalhando com IA**
   - [Prompting e CLAUDE.md](ia-workflow)
   - [Skill de bootstrap](bootstrap)
+
+- **Deploy**
+  - [Docker e Kubernetes (GCP)](deploy)

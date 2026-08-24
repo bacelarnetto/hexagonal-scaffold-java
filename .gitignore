@@ -3,3 +3,6 @@ target/
 .idea/
 *.iml
 .DS_Store
+
+# segredos reais nunca vao pro Git -- so o template (secret.example.yaml) fica versionado
+kubernetes/secret.yaml

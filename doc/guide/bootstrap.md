@@ -33,7 +33,9 @@ O skill:
 4. Renomeia o módulo de exemplo `produto` para o domínio informado
 5. Troca H2 por MySQL + Testcontainers (ver `mysql-setup.md` dentro da pasta do skill) e gera
    `docker-compose.yml`
-6. Roda `mvn test` no projeto gerado antes de considerar a tarefa concluída
+6. Renomeia `scaffold` → `<app>` em `kubernetes/*.yaml` (Deployment/Service/ConfigMap/Secret, e as
+   referências cruzadas entre eles) — ver [Docker e Kubernetes (GCP)](deploy)
+7. Roda `mvn test` no projeto gerado antes de considerar a tarefa concluída
 
 Esse skill é genérico — serve para qualquer projeto novo, não só derivados de um domínio específico.
 

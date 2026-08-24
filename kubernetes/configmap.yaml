@@ -1,0 +1,15 @@
+# Config nao sensivel do banco. Os mesmos nomes de variavel (DB_HOST/DB_PORT/DB_NAME) usados em
+# application.properties (ver doc/guide sobre configuracao de banco) -- funcionam com qualquer
+# banco relacional escolhido no bootstrap, nao so MySQL.
+#
+# Se o banco for Cloud SQL via Cloud SQL Auth Proxy (sidecar no mesmo Pod -- ver comentario em
+# deployment.yaml), db_host fica como "127.0.0.1": o proxy escuta localmente dentro do Pod e faz
+# o tunel ate a instancia gerenciada.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: scaffold-config
+data:
+  db_host: "127.0.0.1"
+  db_port: "3306"
+  db_name: "app"

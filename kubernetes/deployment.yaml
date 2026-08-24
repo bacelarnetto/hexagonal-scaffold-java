@@ -1,0 +1,74 @@
+# Troque a imagem abaixo pelo caminho real no Artifact Registry depois do build:
+#   REGION-docker.pkg.dev/PROJECT_ID/REPOSITORY/scaffold:TAG
+# (`docker build -f docker/Dockerfile -t <esse-caminho> .` a partir da raiz do repo, depois
+# `docker push`)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scaffold
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: scaffold
+  template:
+    metadata:
+      labels:
+        app: scaffold
+    spec:
+      containers:
+        - name: scaffold
+          image: REGION-docker.pkg.dev/PROJECT_ID/REPOSITORY/scaffold:TAG
+          ports:
+            - containerPort: 8080
+          env:
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: scaffold-config
+                  key: db_host
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: scaffold-config
+                  key: db_port
+            - name: DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: scaffold-config
+                  key: db_name
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: scaffold-db-secret
+                  key: db_user
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: scaffold-db-secret
+                  key: db_password
+          resources:
+            requests:
+              cpu: 250m
+              memory: 384Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
+      # Padrao recomendado para Cloud SQL no GKE: um segundo container (sidecar) com o Cloud SQL
+      # Auth Proxy no mesmo Pod, em vez de rodar o banco dentro do Kubernetes -- o que a maioria
+      # dos exemplos de referencia por ai faz, mas nao e apropriado para producao (sem backup
+      # gerenciado, sem HA, PVC manual). Com esse padrao db_host no ConfigMap fica "127.0.0.1"
+      # (ja e o default acima). Exemplo completo do sidecar, com Workload Identity, em
+      # doc/guide/deploy.md.

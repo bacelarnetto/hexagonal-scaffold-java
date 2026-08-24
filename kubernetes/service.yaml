@@ -1,0 +1,14 @@
+# LoadBalancer no GKE provisiona um IP publico via Load Balancer do GCP automaticamente -- sem
+# precisar de Ingress/cert-manager para o caso simples (HTTP direto). Se precisar de TLS/dominio
+# proprio depois, trocar para ClusterIP + Ingress fica documentado como proximo passo, nao aqui.
+apiVersion: v1
+kind: Service
+metadata:
+  name: scaffold-svc
+spec:
+  selector:
+    app: scaffold
+  ports:
+    - port: 8080
+      targetPort: 8080
+  type: LoadBalancer

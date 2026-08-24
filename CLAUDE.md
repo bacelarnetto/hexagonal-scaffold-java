@@ -11,12 +11,16 @@ linguagem/lib estão marcadas ao longo deste arquivo.
 ## Documentação de referência
 
 Antes de qualquer decisão de arquitetura, consulte `doc/guide/` (docsify — `npx serve doc/guide`):
-Arquitetura, Módulo de exemplo, Pirâmide de testes, Prompting e CLAUDE.md, Skill de bootstrap.
+Arquitetura, Módulo de exemplo, Pirâmide de testes, Prompting e CLAUDE.md, Skill de bootstrap,
+Docker e Kubernetes.
 
 ## Stack
 
 - Java 21 + Spring Boot 3.5.3 · Maven multi-módulo (4 módulos físicos) · MySQL (H2 só no scaffold,
-  sem infra) · Flyway · Spring Data JPA · Undertow · Lombok (só em `infrastructure/`)
+  sem infra) · Flyway · Spring Data JPA · Undertow · Lombok (só em `infrastructure/`) · Actuator
+  (probes de K8s)
+- Deploy: `docker/Dockerfile` (multi-stage) + `kubernetes/` (Deployment/Service/ConfigMap/Secret),
+  voltado para GKE/GCP — ver `doc/guide/deploy.md`
 
 ## Arquitetura — regras obrigatórias
 
@@ -131,3 +135,7 @@ próximo prompt (seu ou de outra pessoa) não repita as mesmas perguntas.
 - Não criar `domain/service/` para lógica que é só CRUD
 - Não usar Lombok em `domain/` ou `application/` — fica restrito a `infrastructure/`
 - Não considerar uma tarefa concluída sem rodar `mvn test`
+- Não colocar o banco de dados rodando dentro do Kubernetes (Deployment + PVC) — no GCP o banco é
+  gerenciado (Cloud SQL), acessado via Cloud SQL Auth Proxy como sidecar; ver `doc/guide/deploy.md`
+- Não commitar `kubernetes/secret.yaml` com credenciais reais — só `secret.example.yaml` (template)
+  fica versionado; o real já está no `.gitignore`
