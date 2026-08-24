@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>br.com.scaffold</groupId>
+        <artifactId>hexagonal-scaffold-java</artifactId>
+        <version>0.1.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>scaffold-domain</artifactId>
+    <name>scaffold - domain</name>
+    <description>
+        Java puro (so JDK). NENHUMA dependencia de Spring, JPA, Lombok ou qualquer framework/lib aqui --
+        o compilador garante isso porque este modulo simplesmente nao tem essas dependencias no classpath.
+        Records fazem o papel das data class do Kotlin sem precisar de nenhuma lib extra.
+    </description>
+
+    <dependencies>
+        <!-- Test: JUnit5 puro. Sem spring-boot-starter-test aqui de proposito:
+             se o domain precisar de Spring para ser testado, o domain deixou de ser puro. -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+</project>
