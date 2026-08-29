@@ -28,7 +28,7 @@ domain/          Java puro (só JDK). Sem Spring, sem JPA, sem Lombok — o pom.
                  dependências, não tem como "vazar" framework pra dentro do domínio por acidente.
 infrastructure/  @Entity, JpaRepository, @Repository adapter. Mapeamento entity<->domain explícito
                  (toDomain()/toEntity()), nunca BeanUtils.copyProperties(). Único módulo com Lombok.
-application/     @Service/@Transactional, @RestController, DTOs, mappers, GlobalExceptionHandler.
+application/     Use cases (@Service/@Transactional), @RestController, DTOs, mappers, GlobalExceptionHandler.
 starter/         @SpringBootApplication + application.yml. Nenhuma regra de negócio aqui.
 docker/          Dockerfile multi-stage self-contido (build + runtime, sem precisar de mvn local).
 kubernetes/      Deployment + Service + ConfigMap + Secret (template), voltado para GKE/GCP.
@@ -40,10 +40,10 @@ verdade (`valorVenda = custo / (1 - margem/100)`) em `domain/service/ProdutoPrec
 `@Service`, lança `RegraDeNegocioException` quando a margem é inválida. Passeio completo,
 arquivo por arquivo: `doc/guide/modulo-exemplo.md`.
 
-Também inclui um exemplo de **rollback via `@Transactional`** (`ProdutoService.cadastrarEmLote()` +
+Também inclui um exemplo de **rollback via `@Transactional`** (`CadastrarProdutoEmLoteUseCase` +
 `POST /produto/lote`): mostra como uma regra que mora em `domain/` (sem Spring) consegue disparar
 rollback de uma transação Spring sem nunca saber que ela existe — só lançando uma exceção normal.
-Ver `doc/guide/modulo-exemplo.md#transação-e-rollback-cadastraremlote`.
+Ver `doc/guide/modulo-exemplo.md#transação-e-rollback-cadastrarprodutoemloteusecaseimpl`.
 
 ## Rodar o scaffold como está
 
@@ -123,10 +123,11 @@ silenciosamente com frequência (import esquecido, diretório não movido).
 
 ## Convenções (resumo — detalhes em `CLAUDE.md` e `doc/guide/`)
 
-- `domain/service/` nunca leva `@Service`, nunca lança exceção HTTP, nunca injeta `application/service/`
+- `domain/service/` nunca leva `@Service`, nunca lança exceção HTTP, nunca injeta `application/usecase/`
+- Um caso de uso por par de arquivos (`application/usecase/XxxUseCase.java` + `XxxUseCaseImpl.java`); controllers dependem da interface
 - Mapper explícito sempre, nunca `BeanUtils.copyProperties()`
 - Antes de extrair um `domain/service/`, confirme que existe lógica pura real — CRUD puro não ganha nada com isso
-- Pirâmide de testes: domain (muitos, sem mock) → application (poucos, Mockito na porta) → integração (um por controller, banco real)
+- Pirâmide de testes: domain (muitos, sem mock) → application (um teste por use case, Mockito na dependência direta) → integração (um por controller, banco real)
 
 ## Diferenças em relação à versão Kotlin
 

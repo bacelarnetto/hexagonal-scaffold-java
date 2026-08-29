@@ -18,24 +18,27 @@ graph TD
 `domain/src/test/java/.../ProdutoPrecoLogicUnitTest.java` — instancia a classe direto, sem mock,
 sem contexto Spring. É o teste mais barato e mais rápido de rodar; deveria ser a maioria.
 
-## Meio — application, com mock da porta
+## Meio — application, um teste por use case
 
-`application/src/test/java/.../ProdutoServiceUnitTest.java` — Mockito (`@ExtendWith(MockitoExtension.class)`,
-`@Mock`) só na `ProdutoRepositoryPort`.
+`application/src/test/java/.../usecase/` — um arquivo de teste por caso de uso, Mockito
+(`@ExtendWith(MockitoExtension.class)`, `@Mock`) só na dependência direta:
+`CadastrarProdutoUseCaseImplTest` mocka `ProdutoRepositoryPort`,
+`CadastrarProdutoEmLoteUseCaseImplTest` mocka `CadastrarProdutoUseCase` (o use case vizinho que ele
+injeta), não a porta. Cada teste isola exatamente a orquestração daquele caso de uso.
 
 **Regra que existe por causa de um erro real visto num projeto de referência:** sempre chame o
-método real do service **primeiro**, e só **depois** verifique o mock e o valor retornado. Nunca
+método real do use case **primeiro**, e só **depois** verifique o mock e o valor retornado. Nunca
 invoque o mock diretamente no corpo do teste como se fosse o código em teste — isso faz o teste
-passar não importa o que o service faça.
+passar não importa o que o use case faça.
 
 ```java
 // Errado — não testa nada de verdade
 port.save(mockProduto);
 verify(port, only()).save(mockProduto);
-service.cadastrar(dto);   // chamado depois, sem nenhuma asserção
+useCase.executar(dto);   // chamado depois, sem nenhuma asserção
 
-// Certo — chama o service, depois verifica o efeito
-service.cadastrar(dto);
+// Certo — chama o use case, depois verifica o efeito
+useCase.executar(dto);
 verify(port).save(savedCaptor.capture());
 assertEquals(0, expected.compareTo(savedCaptor.getValue().valorVenda()));
 ```
@@ -61,10 +64,10 @@ chama `produtoJpaRepository.deleteAll()`.
 
 `pci3_loteComItemInvalidoNoFinalNaoDeixaNenhumProdutoSalvo` chama `POST /produto/lote` com 3 itens
 (2 válidos + 1 com margem inválida) e depois um `GET /produto` simples. Se o rollback do
-`@Transactional` em `ProdutoService.cadastrarEmLote()` funcionar, a lista volta vazia — nenhum dos
-2 itens válidos fica salvo, mesmo já tendo passado por `port.save()` antes do item inválido estourar
-a exceção. Ver a explicação completa do mecanismo em
-[Módulo de exemplo — produto](modulo-exemplo#transação-e-rollback-cadastraremlote).
+`@Transactional` em `CadastrarProdutoEmLoteUseCaseImpl.executar()` funcionar, a lista volta vazia —
+nenhum dos 2 itens válidos fica salvo, mesmo já tendo passado por `port.save()` antes do item
+inválido estourar a exceção. Ver a explicação completa do mecanismo em
+[Módulo de exemplo — produto](modulo-exemplo#transação-e-rollback-cadastrarprodutoemloteusecaseimpl).
 
 Esse é o único nível da pirâmide que pode provar rollback de verdade: um teste com mock na porta
 (nível 2) só provaria que `port.save()` parou de ser chamado, não que o que já tinha sido chamado

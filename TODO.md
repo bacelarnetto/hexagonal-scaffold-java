@@ -10,8 +10,8 @@ Ideia de desenho, a confirmar na implementação:
 - Novo módulo `orchestration/`, mesmo padrão já usado pro Lombok em `infrastructure/`: o SDK do
   Temporal fica restrito a esse módulo só, `domain/` continua puro (só JDK). Depende de `domain/`
   e possivelmente de `application/` (Activities como wrappers finos dos services existentes).
-- **Activities** delegam pra `application/service/` ou direto pra uma port de `domain/` — reuso
-  quase total do que já existe.
+- **Activities** delegam pra `application/usecase/` (a interface do use case, não a Impl) ou direto
+  pra uma port de `domain/` — reuso quase total do que já existe.
 - **Workflows** não podem morar em `domain/` (dependem do SDK do Temporal) nem são bem
   `application/` (não rodam sob `@Transactional`/ciclo de vida normal do Spring, rodam sob o motor
   de replay determinístico do Temporal).

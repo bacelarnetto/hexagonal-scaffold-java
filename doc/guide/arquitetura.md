@@ -33,20 +33,26 @@ graph TD
 @Builder`) porque `@Entity` do JPA precisa de construtor sem args e se beneficia de campos
 mutáveis — Lombok fica restrito a esse módulo.
 
-## Dois tipos de "service"
+## `domain/service/` vs. `application/usecase/`
 
 ```
-domain/service/XxxLogic.java        sem @Service, sem @Transactional
-                                     recebe ports por construtor (ou nenhuma dependência)
-                                     contém a regra de negócio pura, testável sem Spring
+domain/service/XxxLogic.java         sem @Service, sem @Transactional
+                                      recebe ports por construtor (ou nenhuma dependência)
+                                      contém a regra de negócio pura, testável sem Spring
 
-application/service/XxxService.java @Service (+ @Transactional quando escreve)
-                                     instancia XxxLogic direto (new) se ela não tem dependências,
-                                     ou recebe via construtor se tiver
-                                     não contém regra de negócio — só orquestra
+application/usecase/XxxUseCase.java      @FunctionalInterface interface XxxUseCase { R executar(...); }
+application/usecase/XxxUseCaseImpl.java  class XxxUseCaseImpl implements XxxUseCase (@Service, @Transactional quando escreve)
+                                          instancia XxxLogic direto (new) se ela não tem dependências,
+                                          ou recebe via construtor se tiver -- ou injeta outro XxxUseCase
+                                          não contém regra de negócio — só orquestra
 ```
 
-Ver o exemplo completo em [Módulo de exemplo — produto](modulo-exemplo).
+Um caso de uso por par de arquivos (Single Responsibility) — Java não permite duas classes públicas
+no mesmo arquivo, por isso interface e implementação ficam separadas (em Kotlin ficam juntas no
+mesmo arquivo). Controllers dependem da *interface* (Dependency Inversion), e cada interface só
+expõe o método que aquele caso de uso precisa (Interface Segregation) — nada de uma classe
+`XxxService` só com vários métodos não relacionados. Ver o exemplo completo em
+[Módulo de exemplo — produto](modulo-exemplo).
 
 ## Regra prática antes de criar um `domain/service/` novo
 

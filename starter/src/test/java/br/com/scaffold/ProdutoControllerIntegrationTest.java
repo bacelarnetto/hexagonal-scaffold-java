@@ -84,9 +84,9 @@ class ProdutoControllerIntegrationTest {
 
     // PCI3: prova o rollback de verdade. cadastrarEmLote salva 2 produtos validos e so estoura
     // RegraDeNegocioException no 3o; como os 3 estao na mesma transacao (@Transactional em
-    // ProdutoService.cadastrarEmLote), o rollback desfaz os 2 primeiros tambem -- por isso o
-    // GET /produto depois do lote falho tem que devolver lista vazia, nao 2 produtos. Isso so
-    // e visivel com banco real (H2 aqui); um teste com mock nao provaria nada sobre transacao.
+    // CadastrarProdutoEmLoteUseCaseImpl.executar()), o rollback desfaz os 2 primeiros tambem --
+    // por isso o GET /produto depois do lote falho tem que devolver lista vazia, nao 2 produtos.
+    // Isso so e visivel com banco real (H2 aqui); um teste com mock nao provaria nada sobre transacao.
     @Test
     void pci3_loteComItemInvalidoNoFinalNaoDeixaNenhumProdutoSalvo() throws Exception {
         List<Map<String, String>> lote = List.of(
