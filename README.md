@@ -43,7 +43,7 @@ arquivo por arquivo: `doc/guide/modulo-exemplo.md`.
 Também inclui um exemplo de **rollback via `@Transactional`** (`CadastrarProdutoEmLoteUseCase` +
 `POST /produto/lote`): mostra como uma regra que mora em `domain/` (sem Spring) consegue disparar
 rollback de uma transação Spring sem nunca saber que ela existe — só lançando uma exceção normal.
-Ver `doc/guide/modulo-exemplo.md#transação-e-rollback-cadastrarprodutoemloteusecaseimpl`.
+Ver `doc/guide/modulo-exemplo.md#transação-e-rollback-cadastrarprodutoemloteusecase`.
 
 ## Rodar o scaffold como está
 
@@ -140,6 +140,7 @@ linguagem/lib exige mudou:
 | `produto.copy(valorVenda = x)` | `produto.comValorVenda(x)` | Records não têm `copy()` embutido; método `comX(...)` explícito no próprio record cobre os pontos de uso reais sem introduzir uma lib de "with-er" genérica |
 | `@Entity` como `data class` (com plugins `kotlin-allopen`/`kotlin-noarg`) | `@Entity` como classe Lombok (`@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder`) | Java não tem o problema de classe `final` por padrão que motiva os plugins Kotlin; Lombok resolve boilerplate de getter/setter/construtor. Fica restrito a `infrastructure/` |
 | `ProdutoRepositoryPort.findById(): Produto?` | `ProdutoRepositoryPort.findById(): Optional<Produto>` | `Optional` é o idiomático em Java para "pode não existir"; nulabilidade explícita no tipo como no Kotlin `?` não existe na linguagem |
-| MockK | Mockito (`spring-boot-starter-test`, já incluso) | Lib de mock padrão do ecossistema Java/Spring; mesma regra de teste (chamar o service real primeiro, verificar depois) |
+| MockK | Mockito (`spring-boot-starter-test`, já incluso) | Lib de mock padrão do ecossistema Java/Spring; mesma regra de teste (chamar o use case real primeiro, verificar depois) |
 | `fun interface Mapper<In, Out>` | `@FunctionalInterface interface Mapper<In, Out>` | Equivalente direto |
+| `XxxUseCase.kt` (interface + Impl no mesmo arquivo) | `XxxUseCase.java` + `XxxUseCaseImpl.java` (dois arquivos) | Java não permite duas classes públicas top-level por arquivo; Kotlin permite múltiplas declarações top-level no mesmo arquivo |
 | `kotlin-maven-plugin` + plugins `allopen`/`jpa`/`noarg` no pom raiz | nenhum plugin de linguagem extra | Desnecessário em Java — classes já não são `final` por padrão e `@Entity` não exige plugin de compilador |

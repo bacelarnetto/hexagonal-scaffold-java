@@ -67,7 +67,7 @@ chama `produtoJpaRepository.deleteAll()`.
 `@Transactional` em `CadastrarProdutoEmLoteUseCaseImpl.executar()` funcionar, a lista volta vazia —
 nenhum dos 2 itens válidos fica salvo, mesmo já tendo passado por `port.save()` antes do item
 inválido estourar a exceção. Ver a explicação completa do mecanismo em
-[Módulo de exemplo — produto](modulo-exemplo#transação-e-rollback-cadastrarprodutoemloteusecaseimpl).
+[Módulo de exemplo — produto](modulo-exemplo#transação-e-rollback-cadastrarprodutoemloteusecase).
 
 Esse é o único nível da pirâmide que pode provar rollback de verdade: um teste com mock na porta
 (nível 2) só provaria que `port.save()` parou de ser chamado, não que o que já tinha sido chamado

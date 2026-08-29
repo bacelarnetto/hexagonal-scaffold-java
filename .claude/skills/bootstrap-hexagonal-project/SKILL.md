@@ -52,10 +52,16 @@ rm -rf <destino>/.git
 ## Passo 4 — Renomear o módulo de exemplo `produto/`
 
 Renomear pastas/classes `produto`→`<domínio informado>` e `Produto`→`<Entidade informada>`
-(capitalizada) nos 3 módulos de negócio (domain/infrastructure/application) + o teste de domínio +
-o teste de application + a migration `V1__create_produto.sql` (nome do arquivo e conteúdo). Mantenha
-a lógica como está — é só um exemplo de CRUD com uma regra de preço pura (`calcularValorVenda`); o
-objetivo é dar um primeiro módulo já funcionando com o nome certo, não outra funcionalidade.
+(capitalizada) nos 3 módulos de negócio (domain/infrastructure/application) + a migration
+`V1__create_produto.sql` (nome do arquivo e conteúdo). Em `application/usecase/` são 12 arquivos
+(6 pares interface + Impl: `ListarProdutosUseCase(Impl).java`, `BuscarProdutoPorIdUseCase(Impl).java`,
+`BuscarProdutoViewPorIdUseCase(Impl).java`, `CadastrarProdutoUseCase(Impl).java`,
+`CadastrarProdutoEmLoteUseCase(Impl).java`, `ExcluirProdutoUseCase(Impl).java`) + 3 arquivos de
+teste (`CadastrarProdutoUseCaseImplTest.java`, `BuscarProdutoPorIdUseCaseImplTest.java`,
+`CadastrarProdutoEmLoteUseCaseImplTest.java`) — confira com `grep -rl "Produto"` no destino depois
+de renomear, já que é fácil esquecer um arquivo nesse pacote. Mantenha a lógica como está — é só um
+exemplo de CRUD com uma regra de preço pura (`calcularValorVenda`); o objetivo é dar um primeiro
+módulo já funcionando com o nome certo, não outra funcionalidade.
 
 ## Passo 5 — Trocar H2 por MySQL
 
