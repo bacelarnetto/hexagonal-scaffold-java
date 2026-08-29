@@ -29,7 +29,7 @@ domain/          Java puro (só JDK). Sem Spring, sem JPA, sem Lombok — o pom.
 infrastructure/  @Entity, JpaRepository, @Repository adapter. Mapeamento entity<->domain explícito
                  (toDomain()/toEntity()), nunca BeanUtils.copyProperties(). Único módulo com Lombok.
 application/     @Service/@Transactional, @RestController, DTOs, mappers, GlobalExceptionHandler.
-starter/         @SpringBootApplication + application.properties. Nenhuma regra de negócio aqui.
+starter/         @SpringBootApplication + application.yml. Nenhuma regra de negócio aqui.
 docker/          Dockerfile multi-stage self-contido (build + runtime, sem precisar de mvn local).
 kubernetes/      Deployment + Service + ConfigMap + Secret (template), voltado para GKE/GCP.
 doc/guide/       Guia docsify (arquitetura, módulo de exemplo, pirâmide de testes, workflow com IA).
@@ -100,7 +100,7 @@ Detalhe do que o skill faz passo a passo: `doc/guide/bootstrap.md`.
 | Diretório de destino | `~/work/padaria-api` | destino do `cp -R` |
 | Primeiro domínio de negócio | `pedido` | substitui o módulo de exemplo `produto` |
 | Entidade de exemplo | `Pedido` | substitui a classe `Produto` |
-| Banco de dados | MySQL (único suportado hoje) | `infrastructure/pom.xml` + `application.properties` |
+| Banco de dados | MySQL (único suportado hoje) | `infrastructure/pom.xml` + `application.yml` |
 
 ```bash
 cp -R hexagonal-scaffold-java <destino>

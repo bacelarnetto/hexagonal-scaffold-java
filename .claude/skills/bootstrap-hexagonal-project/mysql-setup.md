@@ -18,22 +18,29 @@ Remover a dependência `com.h2database:h2`. Adicionar:
 
 Não fixar versão do `mysql-connector-j` — o BOM do `spring-boot-starter-parent` já gerencia.
 
-## 2. `starter/src/main/resources/application.properties`
+## 2. `starter/src/main/resources/application.yml`
 
-```properties
-spring.datasource.url=jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:app}
-spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
-spring.datasource.username=${DB_USER:root}
-spring.datasource.password=${DB_PASSWORD:root}
+```yaml
+spring:
+  datasource:
+    url: "jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:app}"
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: "${DB_USER:root}"
+    password: "${DB_PASSWORD:root}"
 
-spring.jpa.hibernate.ddl-auto=validate
-spring.jpa.open-in-view=false
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
 
-spring.flyway.enabled=true
-spring.flyway.locations=classpath:db/migration
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
 ```
 
-Troque `app` pelo nome do banco combinado com o usuário (geralmente o nome da aplicação).
+Troque `app` pelo nome do banco combinado com o usuário (geralmente o nome da aplicação). Mantenha
+o bloco `management:` (probes do Actuator) que já está no scaffold — só o bloco `spring:` acima
+muda de H2 para MySQL.
 
 ## 3. `docker-compose.yml` (raiz do projeto)
 

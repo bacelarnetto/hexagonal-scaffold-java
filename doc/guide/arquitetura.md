@@ -23,7 +23,7 @@ graph TD
 | `domain` | nada (só JDK) | Spring, JPA, Lombok, qualquer framework/lib — **o `pom.xml` não tem essas dependências, então não compila mesmo se alguém tentar** |
 | `infrastructure` | `domain` | regra de negócio — só tradução entity ↔ domain |
 | `application` | `domain`, `infrastructure` | acesso direto a `infrastructure/entity` fora do próprio adapter |
-| `starter` | `application` | qualquer classe de negócio — só `@SpringBootApplication` + `application.properties` |
+| `starter` | `application` | qualquer classe de negócio — só `@SpringBootApplication` + `application.yml` |
 
 ## Records vs. Lombok
 

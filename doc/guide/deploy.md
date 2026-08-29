@@ -114,7 +114,7 @@ kubectl get svc scaffold-svc   # espera o LoadBalancer do GCP atribuir um IP ext
 `kubernetes/deployment.yaml` aponta `readinessProbe`/`livenessProbe` para
 `/actuator/health/readiness` e `/actuator/health/liveness`. Esses dois endpoints só existem porque
 `starter/pom.xml` depende de `spring-boot-starter-actuator` e
-`management.endpoint.health.probes.enabled=true` está em `application.properties` — sem isso, só
+`management.endpoint.health.probes.enabled=true` está em `application.yml` — sem isso, só
 haveria `/actuator/health` genérico (não distingue "container vivo mas ainda inicializando" de
 "pronto pra receber tráfego", que é exatamente o que o Kubernetes precisa saber pra não rotear
 tráfego pra um Pod que ainda está subindo).

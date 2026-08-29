@@ -31,7 +31,7 @@ domain/          Java puro (só JDK). pom.xml não tem Spring/JPA/Lombok como de
                  como vazar framework pra dentro por acidente.
 infrastructure/  @Entity, JpaRepository, @Repository adapter. Depende só de domain.
 application/     @Service/@Transactional, @RestController, DTOs, mappers. Depende de domain + infrastructure.
-starter/         @SpringBootApplication + application.properties. Depende só de application.
+starter/         @SpringBootApplication + application.yml. Depende só de application.
 ```
 
 Nunca adicione Spring/JPA/Lombok como dependência de `domain/pom.xml`. Se uma classe em `domain/`

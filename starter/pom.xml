@@ -11,7 +11,7 @@
 
     <artifactId>scaffold-starter</artifactId>
     <name>scaffold - starter</name>
-    <description>Entry point. So @SpringBootApplication + application.properties -- nenhuma regra de negocio aqui.</description>
+    <description>Entry point. So @SpringBootApplication + application.yml -- nenhuma regra de negocio aqui.</description>
 
     <dependencies>
         <dependency>

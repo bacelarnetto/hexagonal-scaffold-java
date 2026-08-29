@@ -60,7 +60,7 @@ objetivo é dar um primeiro módulo já funcionando com o nome certo, não outra
 ## Passo 5 — Trocar H2 por MySQL
 
 Ver [mysql-setup.md](mysql-setup.md) para o passo a passo completo: dependências do pom,
-`application.properties`, `docker-compose.yml`, e a troca do teste de integração de MockMvc+H2 para
+`application.yml`, `docker-compose.yml`, e a troca do teste de integração de MockMvc+H2 para
 `@SpringBootTest` + Testcontainers+MySQL.
 
 ## Passo 6 — Renomear `docker/` e `kubernetes/`
