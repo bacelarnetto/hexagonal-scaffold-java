@@ -25,3 +25,12 @@ Ideia de desenho, a confirmar na implementação:
 
 Possivelmente expor isso como opção na skill `bootstrap-hexagonal-project` (pergunta extra: "app
 orquestrador com Temporal?"), gerando o módulo `orchestration/` condicionalmente.
+
+## Checkstyle como primeira linha de defesa (opcional)
+
+O enforcement de naming conventions via ArchUnit já está implementado
+(`starter/src/test/java/.../architecture/NamingConventionArchTest.java`, roda com `mvn test` — ver
+`doc/guide/naming-conventions.md`). Uma regra de Checkstyle (`TypeName` com regex proibindo
+`.*(Manager|Processor|Helper)$`) daria feedback mais cedo (no editor/IDE, antes de rodar os testes)
+como complemento — mais barata de configurar, mas menos precisa (não entende pacote/anotação).
+Não é essencial; ArchUnit já cobre a regra que importa.

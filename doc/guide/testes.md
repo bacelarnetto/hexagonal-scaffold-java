@@ -72,3 +72,40 @@ inválido estourar a exceção. Ver a explicação completa do mecanismo em
 Esse é o único nível da pirâmide que pode provar rollback de verdade: um teste com mock na porta
 (nível 2) só provaria que `port.save()` parou de ser chamado, não que o que já tinha sido chamado
 foi desfeito — rollback é uma propriedade da transação real, não do código Java em si.
+
+## Cobertura (JaCoCo)
+
+`mvn test` já gera relatório de cobertura por módulo — não precisa esperar chegar na pipeline pra
+descobrir que caiu. De propósito **não há gate de falha configurado** (`jacoco:check` com mínimo)
+— cada módulo tem um perfil de cobertura esperado diferente (`domain/` deveria ficar perto de
+100%; `infrastructure/adapter` é mais difícil de cobrir sem duplicar o teste de integração), então
+um número único de corte serviria mal para os dois.
+
+### Gerando e abrindo o relatório
+
+```bash
+mvn test                                          # roda os testes de todos os módulos e já gera o relatório de cada um
+
+open domain/target/site/jacoco/index.html         # macOS -- troque "open" por "xdg-open" no Linux
+open application/target/site/jacoco/index.html
+open infrastructure/target/site/jacoco/index.html
+open starter/target/site/jacoco/index.html
+```
+
+Cada `index.html` é a página inicial daquele módulo — lista os pacotes, e clicando num pacote você
+chega na classe, e na classe chega na visão linha a linha (verde = coberta, vermelho = não
+coberta, amarelo = branch parcialmente coberto). Não existe um relatório único agregando os 4
+módulos — são 4 relatórios separados, um por `target/site/jacoco/` (dá pra consolidar depois com o
+goal `report-aggregate` do próprio plugin, não configurado hoje).
+
+Rodar só um módulo (mais rápido, útil ao iterar num só): `domain/` não depende de nenhum outro
+módulo, então `mvn test -pl domain` sozinho já funciona. Os outros dependem de módulos irmãos —
+use `-am` pra garantir que eles estejam compilados e instalados antes: `mvn test -pl application -am`.
+
+**Leia com ressalva o número de `domain/model`:** `Produto` é um `record` — o compilador Java
+gera `equals()`/`hashCode()`/`toString()`/os acessores automaticamente, e esses métodos raramente
+são exercitados diretamente pelos testes (não asserimos `produto1.equals(produto2)` em lugar
+nenhum). Isso derruba o percentual de `domain/model` sem significar nada sobre a qualidade dos
+testes — o que importa de verdade é `domain/service` (a regra pura, `ProdutoPrecoLogic`), que fica
+em 100% neste scaffold. Ao ler um relatório de cobertura, olhe `domain/service` e
+`application/usecase` antes de `domain/model`.

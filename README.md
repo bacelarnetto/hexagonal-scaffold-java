@@ -1,7 +1,7 @@
 # hexagonal-scaffold-java
 
 Template Maven multi-módulo (Java 21 + Spring Boot 3.5.3) para arquitetura hexagonal pura. Nasce
-validado — os 4 módulos compilam, os 10 testes passam, o jar sobe e responde de verdade.
+validado — os 4 módulos compilam, os 25 testes passam, o jar sobe e responde de verdade.
 
 Scaffold de **app atômico**: gera uma única aplicação Spring Boot, com um único domínio de negócio
 por vez — não é um monorepo nem multi-serviço.
@@ -48,7 +48,7 @@ Ver `doc/guide/modulo-exemplo.md#transação-e-rollback-cadastrarprodutoemloteus
 ## Rodar o scaffold como está
 
 ```bash
-mvn test                          # roda os 10 testes (domain puro, application com Mockito, integração com H2)
+mvn test                          # roda os 25 testes (domain puro, application com Mockito, integração com H2)
 mvn package -DskipTests
 java -jar starter/target/scaffold-starter-*.jar
 curl -X POST localhost:8080/produto -H "Content-Type: application/json" \
@@ -57,6 +57,10 @@ curl -X POST localhost:8080/produto -H "Content-Type: application/json" \
 
 Banco: H2 em memória (modo MySQL), zero infra externa necessária — é só o scaffold em si. Um
 projeto gerado a partir dele já nasce com MySQL de verdade (ver abaixo).
+
+`mvn test` já gera relatório de cobertura por módulo (JaCoCo) — abra
+`<módulo>/target/site/jacoco/index.html` depois de rodar, sem precisar esperar a pipeline pra saber
+se a cobertura caiu. Sem gate de falha configurado de propósito; ver `doc/guide/testes.md`.
 
 ## Docker e Kubernetes (deploy no GCP)
 
@@ -131,7 +135,7 @@ silenciosamente com frequência (import esquecido, diretório não movido).
 
 ## Diferenças em relação à versão Kotlin
 
-Mesma arquitetura, mesmo módulo de exemplo, mesmo número de testes (10) — só o que a troca de
+Mesma arquitetura, mesmo módulo de exemplo, mesmo número de testes (25) — só o que a troca de
 linguagem/lib exige mudou:
 
 | Kotlin | Java | Por quê |

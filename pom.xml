@@ -45,4 +45,35 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <build>
+        <plugins>
+            <!-- Relatorio de cobertura local, junto com `mvn test`: nao espera chegar na
+                 pipeline pra saber que a cobertura caiu. Herdado por todo modulo filho (nenhum
+                 passo extra no skill de bootstrap). Sem gate de falha por enquanto: cada modulo
+                 tem um perfil de cobertura esperado diferente (domain/ deveria ficar perto de
+                 100%, infrastructure/adapter e mais dificil de cobrir sem duplicar o teste de
+                 integracao); ver doc/guide/testes.md antes de configurar um check com minimo. -->
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.12</version>
+                <executions>
+                    <execution>
+                        <id>prepare-agent</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>

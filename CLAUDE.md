@@ -11,8 +11,19 @@ linguagem/lib estão marcadas ao longo deste arquivo.
 ## Documentação de referência
 
 Antes de qualquer decisão de arquitetura, consulte `doc/guide/` (docsify — `npx serve doc/guide`):
-Arquitetura, Módulo de exemplo, Pirâmide de testes, Prompting e CLAUDE.md, Skill de bootstrap,
-Docker e Kubernetes.
+Arquitetura, Módulo de exemplo, Naming Conventions, Pirâmide de testes, Prompting e CLAUDE.md,
+Skill de bootstrap, Docker e Kubernetes.
+
+Nomeação de classe nova (qualquer papel — `UseCase`, `Port`, `Adapter`, `Consumer`, `HttpClient`
+etc.): `doc/guide/naming-conventions.md` é a fonte de verdade, com tabela completa por papel
+arquitetural e lista de sufixos proibidos (`Manager`, `Handler` genérico, `Processor`, `Util`
+genérico).
+
+As regras de dependência/estrutura abaixo (`application/` não acessa `infrastructure/entity`
+diretamente, `@Transactional` só em `UseCaseImpl`, sem `@Autowired` em campo de produção,
+implementação de `Port` sempre em `infrastructure/adapter/`) são verificadas automaticamente por
+`starter/src/test/java/.../architecture/ArchitectureRulesArchTest.java` — ver
+`doc/guide/arquitetura.md` (seção "Validação automática").
 
 ## Stack
 
@@ -149,6 +160,11 @@ domain/entity de um domínio de negócio dentro de outro.
    teste de integração por controller basta; casos de borda de regra de negócio vão no nível 1.
 
 Uma mudança só está pronta depois que `mvn test` passa — compilar não é suficiente.
+
+`mvn test` já gera relatório de cobertura por módulo (JaCoCo, sem gate de falha configurado) —
+`<módulo>/target/site/jacoco/index.html`. Ver `doc/guide/testes.md` (seção "Cobertura") antes de
+interpretar o número de `domain/model`: é maioria boilerplate gerado pelo compilador (`equals`/
+`hashCode`/acessores de `record`), não regra de negócio sem teste.
 
 ## Regra de ouro — atualização obrigatória de documentação
 

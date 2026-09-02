@@ -1,7 +1,7 @@
 # hexagonal-scaffold-java — Guia
 
 Template Maven multi-módulo (Java 21 + Spring Boot 3) para arquitetura hexagonal pura. Nasce
-validado — os 4 módulos compilam, os 10 testes passam, o jar sobe e responde.
+validado — os 4 módulos compilam, os 25 testes passam, o jar sobe e responde.
 
 ---
 
@@ -24,7 +24,8 @@ direto no navegador (`file://`) — precisa de um servidor HTTP, por isso o `npx
 |---|---|
 | [Arquitetura](arquitetura) | Os 4 módulos Maven, o que cada um pode e não pode depender |
 | [Módulo de exemplo — produto](modulo-exemplo) | Passeio pelo CRUD de exemplo, arquivo por arquivo |
-| [Pirâmide de testes](testes) | Os 3 níveis de teste usados aqui e por quê |
+| [Naming Conventions](naming-conventions) | Guia definitivo de nomeação de classes por papel arquitetural |
+| [Pirâmide de testes](testes) | Os 3 níveis de teste usados aqui e por quê, + cobertura (JaCoCo) |
 | [Prompting e CLAUDE.md](ia-workflow) | Como usar um assistente de IA para estender este projeto sem quebrar o padrão |
 | [Skill de bootstrap](bootstrap) | Como gerar um projeto novo a partir deste scaffold |
 | [Docker e Kubernetes (GCP)](deploy) | Build da imagem, manifests de deploy, por que não tem banco dentro do cluster |

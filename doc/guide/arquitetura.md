@@ -60,3 +60,22 @@ Nem todo módulo de negócio tem lógica pura de verdade — CRUD simples não t
 essa separação. Antes de extrair, pergunte: "existe uma regra aqui que não depende de banco, HTTP
 ou tempo de relógio?" Se a resposta for não, o service fica só em `application/`, sem
 contrapartida em `domain/service/`.
+
+## Validação automática (ArchUnit)
+
+Os 4 módulos Maven garantem a *direção* de dependência entre módulos (ver tabela acima) — mas não
+impedem tudo. Uma vez que `application/` já depende de `infrastructure/` (para o wiring do
+adapter), nada no Maven impede que uma classe de `application/controller/` importe
+`ProdutoEntity` diretamente, por exemplo — os dois estão no mesmo classpath. Essas regras "dentro"
+de um módulo são verificadas por `starter/src/test/java/.../architecture/ArchitectureRulesArchTest.java`,
+junto com `mvn test`:
+
+- `application/controller/` e `application/usecase/` nunca dependem de `infrastructure/entity/`
+  diretamente — só o `RepositoryAdapter` conhece a entity
+- `@Transactional` só aparece em classes `application/usecase/*UseCaseImpl`
+- Nenhum campo de código de produção usa `@Autowired` — injeção é sempre via construtor
+- Toda implementação de uma interface `domain/port/*Port` mora em `infrastructure/adapter/`
+
+Ver [Naming Conventions](naming-conventions#validação-automática-no-ci) para a nomeação de classe
+por papel (`NamingConventionArchTest.java`, a outra metade do enforcement automático) e a
+pegadinha de por que esses testes usam `@Test` comuns do Jupiter em vez do módulo `archunit-junit5`.
